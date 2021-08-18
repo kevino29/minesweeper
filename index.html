@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://kit.fontawesome.com/212d82f631.js" crossorigin="anonymous"></script>
+    <script type="module" src="main.js"></script>
+    <link rel="stylesheet" href="./css/mdb.dark.min.css">
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center my-4">MINESWEEPER</h1>
+
+        <div class="row my-2">
+            <div class="col d-flex justify-content-center">
+                <i class="far fa-flag fa-2x"></i>
+                <div id="bombCount" class="h3 mx-3"></div>
+                <i class="far fa-clock fa-2x"></i>
+                <div id="timer" class="h3 mx-3"></div>
+            </div>
+        </div>
+
+        <div class="row my-2">
+            <div class="col d-flex justify-content-center">
+                <div id="resetButton" class="btn btn-primary">RESET</div>
+            </div>
+        </div>
+
+        <div id="game" class="mt-4"></div>
+    </div>
+</body>
+</html>
