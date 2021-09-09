@@ -7,5 +7,5 @@ window.addEventListener('load', () => {
     let grid = new Grid(game,20,20,50);
     grid.create();
 
-    resetButton.addEventListener('click', () => { grid.reset();} );
+    resetButton.addEventListener('click', () => {grid.reset()} );
 });

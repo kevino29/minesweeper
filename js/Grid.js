@@ -10,6 +10,9 @@ class Grid {
         this._bombCount = bombCount;
         this._cells = [];
         this._bombs = [];
+        this._bombsId = [];
+        this._timer = new Timer('#timer');
+        this._timerStarted = false;
     }
 
     getCells() {
@@ -25,25 +28,25 @@ class Grid {
             let randomNum = Math.floor(Math.random() * totalCells) + 1;
             let alreadyExists = false;
 
-            this._bombs.map(e => { if (e === randomNum) alreadyExists = true; });
+            this._bombsId.map(e => { if (e === randomNum) alreadyExists = true; });
             if (alreadyExists) { i--; continue; }
             
-            this._bombs.push(randomNum);
+            this._bombsId.push(randomNum);
         }
 
         // Sort the bomb array from least to greatest
-        this._bombs.sort((a, b) => a - b);
+        this._bombsId.sort((a, b) => a - b);
 
         // Show how many bombs there are
         document.querySelector('#bombCount').innerText = this._bombCount;
 
         // For testing --------------------------------
-        console.dir(this._bombs);
+        console.dir(this._bombsId);
     }
 
     create() {
         // Initialize the bombs, if it hasn't been yet
-        if (this._bombs.length === 0) this.init();
+        if (this._bombsId.length === 0) this.init();
 
         // Create the buttons or 'land'
         let count = 0;
@@ -56,9 +59,9 @@ class Grid {
 
             for (let j = 1; j <= this._cols; j++) {
                 // Set the bombs to the buttons accordingly
-                let hasBomb = false;
                 count++;
-                this._bombs.map(e => { if (e == count) hasBomb = true; });
+                let hasBomb = false;
+                this._bombsId.map(e => { if (e == count) hasBomb = true; });
 
                 // Create the button object
                 let id = 'r' + i.toString() + 'c' + j.toString();
@@ -68,12 +71,20 @@ class Grid {
                 // Add the button to the cells array, for keeping track
                 this._cells.push(button);
 
+                // Add the button with the bomb to the bombs array, for keeping track
+                this._bombs.push(button);
+
                 // Attach a click event listener to the button
                 button.getButton().addEventListener('click', () => {
                     console.log('Button ' + button.getId() + ' was clicked!');
+
+                    if (!this._timerStarted) {
+                        this._timer.start();
+                        this._timerStarted = true;
+                    }
+
                     if (button.click()) {
-                        alert('Game Over! You hit a mine!');
-                        return;
+                        this.#gameOver();
                     }
 
                     if (!button.hasNumber() && !button.hasBomb()) { 
@@ -93,7 +104,7 @@ class Grid {
                     // For testing ------------------------
                     console.log('Cells left to find: ' + cellsLeft);
 
-                    if (cellsLeft === 0) this.#gameOver();
+                    if (cellsLeft === 0) this.#complete();
                 });
 
                 // Attack a right-click event listener to the button
@@ -140,13 +151,26 @@ class Grid {
     }
 
     #gameOver() {
-        alert('Game Over! You found all the mines!');
+        // Show all the mines ---------NEEDS WORK
+        this._bombs.map(cell => {
+            if (cell.hasBomb()) {
+                setTimeout(() => { cell.click(); }, 500);
+                console.log('Bomb found at ' + cell.getId());
+            }
+        });
+    }
+
+    #complete() {
+        alert('Congratulations! You found all the mines!');
     }
 
     reset() {
         this._wrapper.innerHTML = '';
         this._cells = [];
         this._bombs = [];
+        this._bombsId = [];
+        this._timerStarted = false;
+        if (this._timer) this._timer.reset();
         this.create();
     }
 
